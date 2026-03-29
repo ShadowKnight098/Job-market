@@ -12,9 +12,6 @@ COPY . .
 # Create models directory
 RUN mkdir -p models
 
-# Pre-train the agent at build time so Space loads fast
-RUN python train.py
-
 # Expose Gradio port
 EXPOSE 7860
 
