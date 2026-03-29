@@ -1,0 +1,17 @@
+{
+  "Random": {
+    "easy   (Startup Hustler)": 0.7962,
+    "medium (Balanced Strategist)": 0.5216,
+    "hard   (FAANG or Bust)": 0.3771
+  },
+  "Heuristic": {
+    "easy   (Startup Hustler)": 0.8534,
+    "medium (Balanced Strategist)": 0.5081,
+    "hard   (FAANG or Bust)": 0.0
+  },
+  "Q-Learning (trained)": {
+    "easy   (Startup Hustler)": 0.9438,
+    "medium (Balanced Strategist)": 0.7103,
+    "hard   (FAANG or Bust)": 0.0
+  }
+}

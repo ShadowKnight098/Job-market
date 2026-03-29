@@ -1,0 +1,110 @@
+env_id: JobMarketStrategy-v1
+version: "1.0.0"
+description: >
+  A real-world job application strategy environment where an AI agent
+  learns to optimally allocate a limited number of job applications
+  and upskilling actions to maximize shortlisting outcomes.
+
+author: "OpenEnv Hackathon Submission"
+license: MIT
+
+# ── Observation Space ──────────────────────────────────────────────────
+observation_space:
+  type: structured
+  fields:
+    skills_level:
+      type: int
+      range: [0, 5]
+      description: "Candidate's current skill level. Higher = better success rate."
+    applications_left:
+      type: int
+      range: [0, 10]
+      description: "Remaining applications for this episode."
+    company_difficulty:
+      type: int
+      values: [0, 1, 2]
+      description: "Market difficulty. 0=startup, 1=mid-size, 2=FAANG"
+    shortlisted_count:
+      type: int
+      range: [0, 10]
+      description: "Number of successful shortlists this episode."
+    upskill_count:
+      type: int
+      range: [0, 10]
+      description: "Number of upskill actions taken."
+    wasted_count:
+      type: int
+      range: [0, 10]
+      description: "Number of failed application attempts."
+    episode_step:
+      type: int
+      range: [0, 10]
+      description: "Current step in the episode."
+    done:
+      type: bool
+      description: "Whether the episode has ended."
+
+# ── Action Space ──────────────────────────────────────────────────────
+action_space:
+  type: discrete
+  n: 3
+  actions:
+    0:
+      name: apply_small_company
+      description: "Apply to a startup or small company. Higher base success rate."
+    1:
+      name: apply_big_company
+      description: "Apply to a big/FAANG company. Lower success rate but +1.5 reward."
+    2:
+      name: upskill
+      description: "Spend time upskilling. Increases skills_level by 1. +0.5 reward."
+
+# ── Reward Function ───────────────────────────────────────────────────
+reward:
+  range: [-1.0, 1.5]
+  signals:
+    shortlisted_small:   +1.0
+    shortlisted_big:     +1.5
+    upskilled:           +0.5
+    application_failed:  -1.0
+    upskill_at_max:      -0.2
+
+# ── Tasks ─────────────────────────────────────────────────────────────
+tasks:
+  - id: easy
+    name: "Startup Hustler"
+    description: "Apply only to small companies. Maximize shortlists."
+    difficulty: 0.0
+    score_range: [0.0, 1.0]
+    grader: tasks/easy_grader.py
+
+  - id: medium
+    name: "Balanced Strategist"
+    description: "Mix of small and big applications with upskilling."
+    difficulty: 0.5
+    score_range: [0.0, 1.0]
+    grader: tasks/medium_grader.py
+
+  - id: hard
+    name: "FAANG or Bust"
+    description: "Must get shortlisted at a big company. High stakes."
+    difficulty: 1.0
+    score_range: [0.0, 1.0]
+    grader: tasks/hard_grader.py
+
+# ── API ───────────────────────────────────────────────────────────────
+api:
+  reset: "env.reset() -> JobMarketState"
+  step:  "env.step(action: int) -> (JobMarketState, float, bool, dict)"
+  state: "env.state() -> JobMarketState"
+
+# ── Termination ───────────────────────────────────────────────────────
+termination:
+  - applications_left == 0
+  - episode_step >= max_applications
+
+# ── Deployment ────────────────────────────────────────────────────────
+deployment:
+  platform: huggingface_spaces
+  sdk: gradio
+  docker: true
