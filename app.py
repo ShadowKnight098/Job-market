@@ -27,9 +27,7 @@ def load_agent() -> QLearningAgent:
     if os.path.exists(MODEL_PATH):
         agent.load(MODEL_PATH)
     else:
-        os.makedirs("models", exist_ok=True)
-        train(episodes=6000, save_path=MODEL_PATH)
-        agent.load(MODEL_PATH)
+        print("⚠️ Model not found, using untrained agent")
     agent.epsilon = 0.0
     return agent
 
