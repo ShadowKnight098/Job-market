@@ -203,7 +203,7 @@ with gr.Blocks(title="Job Application RL Agent", theme=gr.themes.Soft(primary_hu
 
     gr.Markdown("""
     #  Job Application Strategy — RL Agent
-    **OpenEnv × Scaler Hackathon** &nbsp;|&nbsp; `JobMarketStrategy-v1`
+    **OpenEnv |&nbsp; `JobMarketStrategy-v1`
 
     An RL agent that learns *when* to apply, *when* to upskill — with **real rejection reasons** and **personalised skill recommendations** at every step.
     """)
