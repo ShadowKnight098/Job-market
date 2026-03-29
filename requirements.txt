@@ -1,3 +1,6 @@
 gradio
 numpy
 pandas
+# Add these if your other files use them:
+scikit-learn  # if Q-table uses it
+pickle        # usually built-in, but just in case
